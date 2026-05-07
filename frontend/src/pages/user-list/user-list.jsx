@@ -16,6 +16,7 @@ import {
 import toast from 'react-hot-toast';
 import api from '../../services/apiService';
 import styles from './user-list.module.css';
+import StatusBadge from '../../components/StatusBadge/StatusBadge';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -163,7 +164,7 @@ const UserList = () => {
             ) : (
               users.map(user => (
                 <tr key={user._id}>
-                  <td>
+                  <td data-label="User">
                     <div className={styles.userInfo}>
                       <div className={styles.avatarThumbnail}>
                         {user.profile ? (
@@ -175,14 +176,12 @@ const UserList = () => {
                       <span className={styles.userName}>{user.firstName} {user.lastName}</span>
                     </div>
                   </td>
-                  <td>{user.email}</td>
-                  <td>{user.location}</td>
-                  <td>
-                    <span className={`${styles.badge} ${user.status === 'Active' ? styles.badgeActive : styles.badgeInactive}`}>
-                      {user.status}
-                    </span>
+                  <td data-label="Email">{user.email}</td>
+                  <td data-label="Location">{user.location}</td>
+                  <td data-label="Status">
+                    <StatusBadge status={user.status} />
                   </td>
-                  <td className={styles.actions}>
+                  <td data-label="Actions" className={styles.actions}>
                     <button 
                       className={styles.actionBtn} 
                       onClick={() => navigate(`/view/${user._id}`)}

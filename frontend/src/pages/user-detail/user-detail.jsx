@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Edit, 
-  User as UserIcon
-} from 'lucide-react';
+import { Edit } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../services/apiService';
 import styles from './user-detail.module.css';
+import PageHeader from '../../components/PageHeader/PageHeader';
+import FormField from '../../components/FormField/FormField';
+import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
+import StatusBadge from '../../components/StatusBadge/StatusBadge';
 
 const UserDetail = () => {
   const { id } = useParams();
@@ -36,79 +36,55 @@ const UserDetail = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <Link to="/" className={styles.backBtn}>
-          <ArrowLeft size={16} />
-          Back to list
-        </Link>
-        <div className={styles.title}>
-          <h1>User Profile</h1>
-        </div>
-      </div>
+      <PageHeader title="User Profile" />
 
       <div className={styles.formCard}>
         <div className={styles.avatarUploadContainer}>
           <div className={styles.avatarWrapper}>
-            <div className={styles.avatarPreview}>
-              {user.profile ? (
-                <img src={user.profile} alt="Profile" className={styles.profileImg} />
-              ) : (
-                <UserIcon size={40} color="#cbd5e1" />
-              )}
-            </div>
+            <AvatarDisplay src={user.profile} size={120} />
           </div>
         </div>
 
         <div className={styles.formGrid}>
-          <div className={styles.field}>
-            <label className={styles.label}>First Name</label>
+          <FormField label="First Name">
             <div className={styles.readOnlyValue}>{user.firstName}</div>
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Last Name</label>
+          <FormField label="Last Name">
             <div className={styles.readOnlyValue}>{user.lastName}</div>
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Email Address</label>
+          <FormField label="Email Address">
             <div className={styles.readOnlyValue}>{user.email}</div>
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Mobile (Phone Number)</label>
+          <FormField label="Mobile (Phone Number)">
             <div className={styles.readOnlyValue}>{user.phoneNumber}</div>
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Gender</label>
+          <FormField label="Gender">
             <div className={styles.readOnlyValue}>{user.gender}</div>
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Status</label>
+          <FormField label="Status">
             <div className={styles.readOnlyValue}>
-              <span className={`${styles.statusBadge} ${user.status === 'Active' ? styles.active : styles.inactive}`}>
-                {user.status}
-              </span>
+              <StatusBadge status={user.status} />
             </div>
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Location</label>
+          <FormField label="Location">
             <div className={styles.readOnlyValue}>{user.location}</div>
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Joined On</label>
+          <FormField label="Joined On">
             <div className={styles.readOnlyValue}>
-              {new Date(user.createdAt).toLocaleDateString('en-US', { 
-                month: 'long', 
-                day: 'numeric', 
-                year: 'numeric' 
+              {new Date(user.createdAt).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
               })}
             </div>
-          </div>
+          </FormField>
         </div>
 
         <div className={styles.footer}>

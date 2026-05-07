@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Save, Loader2, Plus, User as UserIcon } from 'lucide-react';
+import { Save, Loader2, Plus, User as UserIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../services/apiService';
 import citiesData from '../../data/cities.json';
 import styles from './user-form.module.css';
+import PageHeader from '../../components/PageHeader/PageHeader';
+import FormField from '../../components/FormField/FormField';
+import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
 
 const UserForm = () => {
   const { id } = useParams();
@@ -147,83 +150,63 @@ const UserForm = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <Link to="/" className={styles.backBtn}>
-          <ArrowLeft size={16} />
-          Back to list
-        </Link>
-        <div className={styles.title}>
-          <h1>{isEdit ? 'Edit User' : 'Add New User'}</h1>
-        </div>
-      </div>
+      <PageHeader title={isEdit ? 'Edit User' : 'Add New User'} />
 
       <form className={styles.formCard} onSubmit={handleSubmit}>
         <div className={styles.avatarUploadContainer}>
           <div className={styles.avatarWrapper}>
-            <div className={styles.avatarPreview}>
-              {formData.profile ? (
-                <img src={formData.profile} alt="Profile" className={styles.profileImg} />
-              ) : (
-                <UserIcon size={40} color="#cbd5e1" />
-              )}
-            </div>
+            <AvatarDisplay src={formData.profile} size={120} />
             <label className={styles.uploadLabel}>
               <Plus size={16} />
-              <input 
-                type="file" 
-                name="profile" 
-                accept="image/*" 
-                onChange={handleChange} 
+              <input
+                type="file"
+                name="profile"
+                accept="image/*"
+                onChange={handleChange}
                 className={styles.hiddenInput}
               />
             </label>
           </div>
+          {errors.profile && <span className={styles.profileError}>{errors.profile}</span>}
         </div>
 
         <div className={styles.formGrid}>
-          <div className={styles.field}>
-            <label className={styles.label}>First Name</label>
-            <input 
-              type="text" 
+          <FormField label="First Name" error={errors.firstName}>
+            <input
+              type="text"
               name="firstName"
               className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`}
               value={formData.firstName}
               onChange={handleChange}
               placeholder="e.g. John"
             />
-            {errors.firstName && <span className={styles.errorMsg}>{errors.firstName}</span>}
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Last Name</label>
-            <input 
-              type="text" 
+          <FormField label="Last Name" error={errors.lastName}>
+            <input
+              type="text"
               name="lastName"
               className={`${styles.input} ${errors.lastName ? styles.inputError : ''}`}
               value={formData.lastName}
               onChange={handleChange}
               placeholder="e.g. Doe"
             />
-            {errors.lastName && <span className={styles.errorMsg}>{errors.lastName}</span>}
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Email Address</label>
-            <input 
-              type="email" 
+          <FormField label="Email Address" error={errors.email}>
+            <input
+              type="email"
               name="email"
               className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
               value={formData.email}
               onChange={handleChange}
               placeholder="john.doe@example.com"
             />
-            {errors.email && <span className={styles.errorMsg}>{errors.email}</span>}
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Mobile (Phone Number)</label>
-            <input 
-              type="text" 
+          <FormField label="Mobile (Phone Number)" error={errors.phoneNumber}>
+            <input
+              type="text"
               name="phoneNumber"
               maxLength={10}
               className={`${styles.input} ${errors.phoneNumber ? styles.inputError : ''}`}
@@ -231,12 +214,10 @@ const UserForm = () => {
               onChange={handleChange}
               placeholder="10 digit number"
             />
-            {errors.phoneNumber && <span className={styles.errorMsg}>{errors.phoneNumber}</span>}
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Select Gender</label>
-            <select 
+          <FormField label="Select Gender" error={errors.gender}>
+            <select
               name="gender"
               className={`${styles.select} ${errors.gender ? styles.inputError : ''}`}
               value={formData.gender}
@@ -247,12 +228,10 @@ const UserForm = () => {
               <option value="Female">Female</option>
               <option value="Other">Other</option>
             </select>
-            {errors.gender && <span className={styles.errorMsg}>{errors.gender}</span>}
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Select Status</label>
-            <select 
+          <FormField label="Select Status">
+            <select
               name="status"
               className={styles.select}
               value={formData.status}
@@ -261,11 +240,10 @@ const UserForm = () => {
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
             </select>
-          </div>
+          </FormField>
 
-          <div className={styles.field}>
-            <label className={styles.label}>Enter Your Location</label>
-            <select 
+          <FormField label="Enter Your Location" error={errors.location}>
+            <select
               name="location"
               className={`${styles.select} ${errors.location ? styles.inputError : ''}`}
               value={formData.location}
@@ -278,16 +256,15 @@ const UserForm = () => {
                 </option>
               ))}
             </select>
-            {errors.location && <span className={styles.errorMsg}>{errors.location}</span>}
-          </div>
+          </FormField>
         </div>
 
         <div className={styles.footer}>
           <Link to="/" className={`${styles.btn} ${styles.btnSecondary}`}>
             Cancel
           </Link>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className={`${styles.btn} ${styles.btnPrimary}`}
             disabled={loading}
           >
