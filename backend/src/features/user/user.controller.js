@@ -154,7 +154,7 @@ const deleteUser = async (req, res) => {
 const exportUsers = async (req, res) => {
     try {
         const users = await User.find({});
-        const fields = ['firstName', 'lastName', 'email', 'phoneNumber', 'location', 'gender', 'profile', 'status', 'createdAt'];
+        const fields = ['firstName', 'lastName', 'email', 'phoneNumber', 'location', 'gender', 'status', 'createdAt'];
         const json2csvParser = new Parser({ fields });
         const csv = json2csvParser.parse(users);
 
