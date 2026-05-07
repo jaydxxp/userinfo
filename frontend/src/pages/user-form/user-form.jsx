@@ -90,7 +90,10 @@ const UserForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate()) {
+      toast.error('Please fill in all required fields correctly');
+      return;
+    }
 
     try {
       setLoading(true);
