@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Search, 
@@ -10,8 +10,10 @@ import {
   ChevronLeft, 
   ChevronRight,
   User as UserIcon,
-  Filter,
-  XCircle
+  XCircle,
+  FileText,
+  FileSpreadsheet,
+  ChevronDown
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../services/apiService';
@@ -26,6 +28,8 @@ const UserList = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [exportOpen, setExportOpen] = useState(false);
+  const exportRef = useRef(null);
   const navigate = useNavigate();
 
   const fetchUsers = async () => {
@@ -64,8 +68,27 @@ const UserList = () => {
     }
   };
 
-  const handleExport = () => {
-    api.exportUsers();
+ 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (exportRef.current && !exportRef.current.contains(e.target)) {
+        setExportOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleExportCSV = () => {
+    setExportOpen(false);
+    api.exportUsers('csv', search, status);
+    toast.success('CSV export started');
+  };
+
+  const handleExportPDF = () => {
+    setExportOpen(false);
+    api.exportUsers('pdf', search, status);
+    toast.success('PDF export started');
   };
 
   return (
@@ -76,10 +99,28 @@ const UserList = () => {
           <p>Manage and organize your users efficiently</p>
         </div>
         <div className={styles.headerActions}>
-          <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={handleExport}>
-            <Download size={18} />
-            Export CSV
-          </button>
+          <div className={styles.exportWrapper} ref={exportRef}>
+            <button
+              className={`${styles.btn} ${styles.btnSecondary}`}
+              onClick={() => setExportOpen(prev => !prev)}
+            >
+              <Download size={16} />
+              Export
+              <ChevronDown size={14} className={exportOpen ? styles.chevronUp : ''} />
+            </button>
+            {exportOpen && (
+              <div className={styles.exportDropdown}>
+                <button className={styles.exportItem} onClick={handleExportCSV}>
+                  <FileSpreadsheet size={16} />
+                  Export as CSV
+                </button>
+                <button className={styles.exportItem} onClick={handleExportPDF}>
+                  <FileText size={16} />
+                  Export as PDF
+                </button>
+              </div>
+            )}
+          </div>
           <Link to="/add" className={`${styles.btn} ${styles.btnPrimary}`}>
             <Plus size={18} />
             Add User

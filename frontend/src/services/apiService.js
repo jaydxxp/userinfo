@@ -23,8 +23,8 @@ export const deleteUser = (id) => api.delete(`/${id}`);
 
 export const checkHealth = () => axios.get(`${BASE_URL}/health`);
 
-export const exportUsers = () => {
-    window.open(`${API_URL}/export`, '_blank');
+export const exportUsers = (format = 'csv', search = '', status = '') => {
+    window.open(`${API_URL}/export?format=${format}&search=${search}&status=${status}`, '_blank');
 };
 
 export default {

@@ -17,7 +17,9 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "json2csv": "^6.0.0-alpha.2",
-    "mongoose": "^9.6.1"
+    "mongoose": "^9.6.1",
+    "pdfkit": "^0.18.0",
+    "pdfkit-table": "^0.1.99"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
